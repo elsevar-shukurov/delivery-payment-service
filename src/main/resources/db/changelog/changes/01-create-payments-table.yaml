@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-payments-table
+      author: user
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: courier_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: courier_balance_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: delivery_fee
+                  type: DECIMAL(19, 2)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: courier_earning
+                  type: DECIMAL(19, 2)
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: payments
+            baseColumnNames: courier_balance_id
+            referencedTableName: courier_balances
+            referencedColumnNames: id
+            constraintName: fk_payments_courier_balance
+            onDelete: SET NULL
+
+        - createIndex:
+            tableName: payments
+            indexName: idx_payments_courier_id
+            columns:
+              - column:
+                  name: courier_id
+
+        - createIndex:
+            tableName: payments
+            indexName: idx_payments_status
+            columns:
+              - column:
+                  name: status
+
+        - createIndex:
+            tableName: payments
+            indexName: idx_payments_order_id
+            columns:
+              - column:
+                  name: order_id
+
+      rollback:
+        - dropTable:
+            tableName: payments

@@ -1,0 +1,12 @@
+server:
+  port: 9093
+spring:
+  datasource:
+    url:
+      jdbc:postgresql://localhost:5432/payment_db
+    username: postgres
+    password: 1234
+  jpa:
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.yaml
