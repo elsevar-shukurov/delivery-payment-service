@@ -5,6 +5,7 @@ import com.example.mspayment.dto.CourierBalanceResponseDto;
 import com.example.mspayment.dto.PaymentRequestDto;
 import com.example.mspayment.dto.PaymentResponseDto;
 import com.example.mspayment.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +22,18 @@ public class PaymentController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void createPayment(@RequestBody PaymentRequestDto requestDto) {
+    public void createPayment(@Valid @RequestBody PaymentRequestDto requestDto) {
         paymentService.createPayment(requestDto);
     }
 
     @GetMapping("/order/{orderId}")
     public PaymentResponseDto getPaymentByOrderId(@PathVariable Long orderId) {
         return paymentService.getPaymentByOrderId(orderId);
+    }
+
+    @GetMapping
+    public List<PaymentResponseDto> getAllPayments() {
+        return  paymentService.getAllPayments();
     }
 
     @GetMapping("/courier/{courierId}")
