@@ -1,6 +1,7 @@
 package com.example.mspayment.dto;
 
 import com.example.mspayment.enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -22,6 +23,10 @@ public class PaymentResponseDto {
     private BigDecimal deliveryFee;
     private BigDecimal courierEarning;
     private PaymentStatus status;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
 }
