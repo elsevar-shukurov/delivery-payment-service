@@ -1,5 +1,7 @@
 package com.example.mspayment.controller;
 
+import com.example.mspayment.criteria.PageCriteria;
+import com.example.mspayment.criteria.PaymentCriteria;
 import com.example.mspayment.dao.entity.Payment;
 import com.example.mspayment.dto.CourierBalanceResponseDto;
 import com.example.mspayment.dto.PaymentRequestDto;
@@ -7,6 +9,7 @@ import com.example.mspayment.dto.PaymentResponseDto;
 import com.example.mspayment.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +35,8 @@ public class PaymentController {
     }
 
     @GetMapping
-    public List<PaymentResponseDto> getAllPayments() {
-        return  paymentService.getAllPayments();
+    public Page<PaymentResponseDto> getAllPayments(PaymentCriteria paymentCriteria, PageCriteria pageCriteria) {
+        return  paymentService.getPayments(paymentCriteria, pageCriteria);
     }
 
     @GetMapping("/courier/{courierId}")

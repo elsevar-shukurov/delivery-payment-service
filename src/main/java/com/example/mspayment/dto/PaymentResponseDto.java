@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,7 +17,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @NoArgsConstructor
 @Builder
 @JsonInclude(NON_NULL)
-public class PaymentResponseDto {
+public class PaymentResponseDto implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private Long orderId;
     private Long courierId;
