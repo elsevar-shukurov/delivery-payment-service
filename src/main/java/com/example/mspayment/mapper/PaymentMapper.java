@@ -3,29 +3,18 @@ package com.example.mspayment.mapper;
 import com.example.mspayment.dao.entity.Payment;
 import com.example.mspayment.dto.PaymentRequestDto;
 import com.example.mspayment.dto.PaymentResponseDto;
+import com.example.mspayment.events.OrderCreatedEvent;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import static com.example.mspayment.enums.PaymentStatus.PENDING;
+@Mapper(componentModel = "spring")
+public interface PaymentMapper {
 
-public class PaymentMapper {
-    public static Payment toEntity(PaymentRequestDto paymentRequestDto) {
-        return Payment.builder()
-                .orderId(paymentRequestDto.getOrderId())
-                .courierId(paymentRequestDto.getCourierId())
-                .deliveryFee(paymentRequestDto.getDeliveryFee())
-                .status(PENDING)
-                .build();
-    }
 
-    public static PaymentResponseDto toPaymentResponseDto(Payment payment) {
-        return PaymentResponseDto.builder()
-                .id(payment.getId())
-                .orderId(payment.getOrderId())
-                .courierId(payment.getCourierId())
-                .deliveryFee(payment.getDeliveryFee())
-                .courierEarning(payment.getCourierEarning())
-                .status(payment.getStatus())
-                .createdAt(payment.getCreatedAt())
-                .updatedAt(payment.getUpdatedAt())
-                .build();
-    }
+    @Mapping(target = "status", ignore = true)
+    Payment toEntity(PaymentRequestDto paymentRequestDto);
+
+    PaymentResponseDto toPaymentResponseDto(Payment payment);
+
+    PaymentRequestDto toPaymentRequestDto(OrderCreatedEvent event);
 }

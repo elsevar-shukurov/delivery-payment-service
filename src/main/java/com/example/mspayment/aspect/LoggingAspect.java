@@ -2,11 +2,9 @@ package com.example.mspayment.aspect;
 
 import com.example.mspayment.annotation.Loggable;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -14,27 +12,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
 
-    @Before("@annotation(loggable) || @within(loggable)")
-    public void logBefore(JoinPoint joinPoint, Loggable loggable) {
-        log.info("START: {}.{}() - Arguments: {}",
-                joinPoint.getSignature().getDeclaringType().getSimpleName(),
-                joinPoint.getSignature().getName(),
-                joinPoint.getArgs());
-    }
+    @Around("@annotation(loggable) || @within(loggable)")
+    public Object logAround(ProceedingJoinPoint joinPoint, Loggable loggable) throws Throwable {
+        String className = joinPoint.getSignature().getDeclaringType().getSimpleName();
+        String methodName = joinPoint.getSignature().getName();
+        Object[] args = joinPoint.getArgs();
 
-    @AfterReturning(pointcut = "@annotation(loggable) || @within(loggable)", returning = "result")
-    public void logAfterReturning(JoinPoint joinPoint, Loggable loggable, Object result) {
-        log.info("END: {}.{}() - Returned: {}",
-                joinPoint.getSignature().getDeclaringType().getSimpleName(),
-                joinPoint.getSignature().getName(),
-                result);
-    }
+        log.info("START: {}.{}() - Arguments: {}", className, methodName, args);
 
-    @AfterThrowing(pointcut = "@annotation(loggable) || @within(loggable)", throwing = "exception")
-    public void logAfterThrowing(JoinPoint joinPoint, Loggable loggable, Throwable exception) {
-        log.error("ERROR: {}.{}() - Exception: {}",
-                joinPoint.getSignature().getDeclaringType().getSimpleName(),
-                joinPoint.getSignature().getName(),
-                exception.getMessage());
+        try {
+            Object result = joinPoint.proceed();
+
+            log.info("END: {}.{}() - Returned: {}", className, methodName, result);
+            return result;
+        } catch (Throwable exception) {
+            log.error("ERROR: {}.{}() - Exception: {}", className, methodName, exception.getMessage());
+            throw exception;
+        }
     }
 }

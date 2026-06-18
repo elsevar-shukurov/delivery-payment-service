@@ -1,9 +1,6 @@
 package com.example.mspayment.dao.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -28,18 +25,13 @@ public class CourierBalance {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotNull(message = "Courier ID cannot be null")
     @Column(name = "courier_id", nullable = false, unique = true)
     private Long courierId;
 
-    @NotNull(message = "Balance cannot be null")
-    @DecimalMin(value = "0.00", message = "Balance cannot be negative")
     @Column(name = "balance", nullable = false, precision = 19, scale = 2)
     @Builder.Default
     private BigDecimal balance = ZERO;
 
-    @NotNull(message = "Turnover cannot be null")
-    @DecimalMin(value = "0.00", message = "Turnover cannot be negative")
     @Column(name = "turnover", nullable = false, precision = 19, scale = 2)
     @Builder.Default
     private BigDecimal turnover = ZERO;
